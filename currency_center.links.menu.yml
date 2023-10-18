@@ -1,0 +1,11 @@
+currency_center.settings_form:
+  route_name: currency_center.settings_form
+  parent: system.admin_config_services
+  title: 'Currency Center - Fixer.io Integration Settings'
+  description: 'Configure Currency Center. External Fixer.io integration settings.'
+
+currency_center.main:
+  route_name: currency_center.main
+  parent: system.admin_content
+  title: 'Currency Center'
+  description: 'Currency Center main page.'

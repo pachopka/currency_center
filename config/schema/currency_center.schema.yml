@@ -1,0 +1,25 @@
+currency_center.settings:
+  type: config_object
+  label: 'Currency Center settings'
+  mapping:
+    apikey:
+      type: string
+      label: 'API key'
+    curcode_url:
+      type: string
+      label: 'Endpoint: Supported Symbols'
+    currate_url:
+      type: string
+      label: 'Endpoint: Latest Rates'
+    base:
+      type: string
+      label: 'Base Currency'
+    curlist:
+      type: sequence
+      label: 'Currency list'
+      sequence:
+        type: string
+        label: 'Currency code'
+    interval:
+      type: integer
+      label: 'Cron Interval time'

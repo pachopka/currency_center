@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Contains install functions for Currency Center module.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ *
+ * Remind that we need an API key to run.
+ *
+ * @see hook_requirements()
+ */
+function currency_center_requirements($phase) {
+
+  $requirements = [];
+  $config = \Drupal::configFactory()->get('currency_center.settings');
+
+  switch ($phase) {
+    case 'runtime':
+
+      if (empty($config->get('apikey'))) {
+        $requirements['currency_center_fixerio'] = [
+          'title' => t('Currency Center - Fixer.io API key'),
+          'value' => t('API key not set'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('You need to <a href="@url">add an API key</a> to be able to store and convert currencies via Fixer.io Integration.', [
+            '@url' => Url::fromRoute('currency_center.settings_form')->toString(),
+          ]),
+        ];
+      }
+
+      else {
+        $requirements['currency_center_fixerio'] = [
+          'title' => t('Currency Center - Fixer.io API key'),
+          'severity' => REQUIREMENT_OK,
+          'value' => t('API key saved'),
+        ];
+      }
+
+      break;
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database table.
+ *
+ * @see hook_schema()
+ */
+function currency_center_schema() {
+  $schema['currency_center'] = [
+    'description' => 'Stores currencies data obtained from Fixer.io.',
+    'fields' => [
+      'curid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique currency ID.',
+      ],
+      'curcode' => [
+        'type' => 'char',
+        'not null' => TRUE,
+        'length' => 3,
+        'description' => 'Unique currency symbol CODE.',
+      ],
+      'curname' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Currency NAME.',
+      ],
+      'rate' => [
+        'type' => 'numeric',
+        'precision' => 65,
+      // Have to make it 12 (not 6) as we have Bitcoin now.
+        'scale' => 12,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Currency RATE',
+      ],
+      'rate_timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix TIMESTAMP when rate was updated.',
+        'size' => 'big',
+      ],
+    ],
+    'primary key' => ['curid'],
+    'indexes' => [
+      'name' => ['curcode'],
+    ],
+  ];
+
+  return $schema;
+}

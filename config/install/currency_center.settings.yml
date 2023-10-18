@@ -1,0 +1,10 @@
+apikey: ''
+curcode_url: 'http://data.fixer.io/api/symbols'
+currate_url: 'http://data.fixer.io/api/latest'
+base: EUR
+curlist: 
+  - USD
+  - GBP
+  - JPY
+  - EUR
+interval: 86400

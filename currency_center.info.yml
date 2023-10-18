@@ -1,0 +1,8 @@
+name: Currency Center
+description: Provides store and convert features for currencies using Fixer.io
+package: Custom
+
+type: module
+core_version_requirement: ^9 || ^10
+
+configure: currency_center.settings_form

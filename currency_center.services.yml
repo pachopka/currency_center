@@ -1,0 +1,12 @@
+services:
+  currency_center.fixerio:
+    class: Drupal\currency_center\CurrencyCenterFixerio
+    arguments: ['@http_client','@config.factory', '@logger.factory']
+
+  currency_center.repository:
+    class: Drupal\currency_center\CurrencyCenterRepository
+    arguments: ['@database', '@logger.factory']
+
+  currency_center.convert:
+    class: Drupal\currency_center\CurrencyCenterConvert
+    arguments: ['@currency_center.repository', '@config.factory', '@logger.factory']

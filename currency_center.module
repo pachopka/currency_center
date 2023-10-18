@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Module file for Currency Center module.
+ */
+
+/**
+ * Implements hook_cron().
+ *
+ * @see hook_cron()
+ */
+function currency_center_cron() {
+  // Access configuration.
+  $config = \Drupal::config('currency_center.settings');
+
+  // Check if API key is ready and it's possible to get updates.
+  if (!empty($config->get('apikey'))) {
+
+    // Defaults to 24h interval.
+    $interval = $config->get('interval');
+    $interval = !empty($interval) ? $interval : 60 * 60 * 24;
+
+    // Keep a time for the next currencies rate update run.
+    $next_update = \Drupal::state()->get('currency_center.next_update', 0);
+    $request_time = \Drupal::time()->getRequestTime();
+
+    // Run cron job.
+    if ($request_time >= $next_update) {
+
+      $container = \Drupal::getContainer();
+      // Access service to get data from Fixer.io.
+      $client = $container->get('currency_center.fixerio');
+      // Make a call.
+      $data = $client->getRates($config->get('apikey'));
+
+      // If call was successfull prepare data to store.
+      if (!empty($data['success'])) {
+        foreach ($data['rates'] as $currencyCode => $currencyRate) {
+          $entry = [
+            'curcode' => $currencyCode,
+            'rate' => $currencyRate,
+            'rate_timestamp' => $data['timestamp'],
+          ];
+          // Access DB service.
+          $repo = $container->get('currency_center.repository');
+          // Try to update DB records.
+          $return = $repo->update($entry);
+          if ($return) {
+            \Drupal::logger('currency_center')->notice('Updated currency entry for @curcode', ['@curcode' => $entry['curcode']]);
+          }
+        }
+
+        // Log cron_job run.
+        \Drupal::logger('currency_center')->notice('currency_center ran');
+        // Uopdate a time for the next currencies rate update run.
+        \Drupal::state()->set('currency_center.next_update', $request_time + $interval);
+      }
+    }
+  }
+}

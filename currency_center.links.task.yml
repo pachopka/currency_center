@@ -1,0 +1,4 @@
+currency_center.main:
+  title: Currency Center
+  route_name: currency_center.main
+  base_route: system.admin_content

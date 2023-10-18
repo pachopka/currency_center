@@ -1,0 +1,15 @@
+currency_center.settings_form:
+  path: '/admin/config/services/fixerio'
+  defaults:
+    _title: 'Currency Center - Fixer.io Integration Settings'
+    _form: '\Drupal\currency_center\Form\CurrencyCenterSettingsForm'
+  requirements:
+    _permission: 'administer currency center settings'
+
+currency_center.main:
+  path: '/admin/content/currency_center'
+  defaults:
+    _controller: '\Drupal\currency_center\Controller\CurrencyCenterController::tableRender'
+    _title: 'Currency Center'
+  requirements:
+    _permission: 'access currency center page'
