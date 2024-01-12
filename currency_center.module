@@ -21,7 +21,7 @@ function currency_center_cron() {
     $interval = $config->get('interval');
     $interval = !empty($interval) ? $interval : 60 * 60 * 24;
 
-    // Keep a time for the next currencies rate update run.
+    // Keep a time for the next currencies rate update.
     $next_update = \Drupal::state()->get('currency_center.next_update', 0);
     $request_time = \Drupal::time()->getRequestTime();
 
@@ -53,7 +53,7 @@ function currency_center_cron() {
 
         // Log cron_job run.
         \Drupal::logger('currency_center')->notice('currency_center ran');
-        // Uopdate a time for the next currencies rate update run.
+        // Update a time for the next currencies rates update.
         \Drupal::state()->set('currency_center.next_update', $request_time + $interval);
       }
     }

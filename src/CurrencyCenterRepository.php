@@ -86,7 +86,7 @@ class CurrencyCenterRepository {
   }
 
   /**
-   * Read from the database using a filter array.
+   * Read from the database.
    *
    * @return object
    *   An object containing the loaded entries if found.
@@ -95,13 +95,12 @@ class CurrencyCenterRepository {
    */
   public function load() {
 
-    // Read all the fields from the dbtng_example table.
+    // Read all the fields from the table.
     $select = $this->connection
       ->select('currency_center')
-      // Add all the fields into our select query.
       ->fields('currency_center');
 
-    // Return the result in object format.
+    // Return the result as object.
     return $select->execute()->fetchAll();
   }
 
